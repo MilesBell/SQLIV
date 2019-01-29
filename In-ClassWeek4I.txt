@@ -1,0 +1,134 @@
+/* text manipulation functions in-class */
+
+SELECT vend_name, UPPER(vend_name) AS vend_name_uppercase --show vendor name as new column with vendor name as uppercase called 'vend_name_uppercase', ordered by vendor name
+FROM Vendors
+ORDER BY vend_name; 
+
+SELECT vend_name, LEFT(vend_name,1) AS vend_name_starting_letter --show left most letter of vendor name, name it new column as 'vend_name_starting_letter'
+FROM Vendors;
+
+SELECT vend_name, LEN(vend_name) --show number of characters 
+FROM Vendors;
+
+SELECT vend_name, RIGHT(vend_name,45) --show left 45 characters (max. 50)
+FROM Vendors;
+
+SELECT cust_name, cust_contact --show customer name and contact from customers table, where the customer contact sounds like 'michael green'
+FROM Customers
+WHERE SOUNDEX(cust_contact)=SOUNDEX('Michael Green');
+
+--Date and time functions 
+
+SELECT order_num  --show all order numbers from the orders table where part of the date (the year, 'yy') is 2012
+FROM Orders
+WHERE DATEPART(YY,order_date)=2012; 
+
+SELECT order_num 
+FROM Orders 
+WHERE DATENAME(yy,order_date)='2012'; --same^ (i.e. 1996)
+
+SELECT order_num
+FROM Orders
+WHERE DATENAME(mm,order_date)='May'; --same^^ but with the month instead of year, hence 'mm' (i.e. March)
+
+SELECT order_num 
+FROM Orders 
+WHERE DATENAME(dw,order_date)='Monday'; --same^^^ but with the day instead of month or year, hence 'dw' (i.e. Thursday)
+
+SELECT order_num 
+FROM Orders
+WHERE DATENAME(dd,order_date)='12'; --same^^^^ but with the date instead of month, year, or day, hence 'dd' (i.e. 13th)
+
+--lets find the month name and day name of a specific date, april 23rd 2017
+
+SELECT DATENAME(mm,'2017/04/23'); --show just the month name of this date '2017/04/23'
+SELECT DATENAME(dw,'2017/04/23'); --show just day name of this date '2017/04/23'
+
+SELECT DAY(order_date) --show order day from the order date (i.e. '13th')
+FROM Orders;
+
+SELECT MONTH(order_date) --show order month from the order date (i.e. '5')
+FROM Orders;
+
+SELECT YEAR(order_date) ----show order year from the order date (i.e. '2012')
+FROM Orders;
+
+--Numeric functions
+
+SELECT PI();
+
+--In-class practice 
+
+SELECT LOWER(prod_name), LOWER(prod_price), LOWER(prod_desc) --1. Show product name, price, and description from the products table as lower case, ordered by price 
+FROM Products
+ORDER BY prod_price;
+
+SELECT cust_id --2. Show customer ids from the orders table where the date is 2012
+FROM Orders
+WHERE DATENAME(yy,order_date)=2012;
+
+SELECT order_item, item_price, quantity, SQRT(item_price), SIN(quantity) --3. show order items, with their price square rooted and quantity sined from the orderitems table
+FROM OrderItems;
+
+SELECT order_num, cust_id, DAY(order_date) AS order_day, MONTH(order_date) AS order_month, YEAR(order_date) AS order_year --4. show order number and customer id from the orders table, with their order day and month and year in separate columns called 'order_day', 'order_month', and 'order_year'
+FROM Orders;
+
+SELECT LEN(cust_name) AS length_cust_name --5. create a new field called 'length_cust_name' with the length of the customers name from the customers table, ordered by customer name in descending order
+FROM Customers
+ORDER BY cust_name DESC;
+
+--Aggregate functions 
+
+SELECT AVG(prod_price) AS avg_price --show the average product price as a field called 'avg_price' from products table
+FROM Products;
+
+SELECT AVG(prod_price) AS avg_price --show average product price as a field called 'avg_price' from products table where the product id is 'dll01'
+FROM Products
+WHERE prod_id='DLL01';
+
+SELECT COUNT(*) AS num_cust --count the number of customers and name the table as 'num_cust' from customers table 
+FROM Customers;
+
+SELECT COUNT(cust_email) AS num_cust --count number of customers (without NULL) and name table as 'num_cust' from customers table 
+FROM Customers;
+
+SELECT MAX(prod_price) AS max_price --show new table of max product price named 'max_price'
+FROM Products;
+
+SELECT MIN(prod_price) AS min_price --show new table of min product price named 'min_price'
+FROM Products;
+
+SELECT SUM(quantity) AS items_ordered --show the total quantity of orders (as new table named 'items_ordered') where the order number equals 20005
+FROM OrderItems
+WHERE order_num=20005;
+
+SELECT SUM(item_price*quantity) AS total_price --new column called 'total_price' w/all of the items prices multiplied by their quantity when the order number is 20005
+FROM OrderItems
+WHERE order_num=20005;
+
+SELECT AVG(DISTINCT prod_price) AS avg_price --show the average product price where each product price is unique, as a new column called 'avg price' when the vendor name is 'dll01' from orderitems table
+FROM Products
+WHERE vend_id='DLL01';
+
+SELECT COUNT(*) AS num_items, MIN(prod_price) AS min_price, MAX(prod_price) AS max_price, AVG(prod_price) AS avg_price
+FROM Products;
+
+--In-class practice #2
+
+SELECT AVG(prod_price) AS avg_price
+FROM Products;
+
+SELECT COUNT(*) AS count_items, AVG(item_price) AS avg_item_price, MIN(item_price) AS min_item_price, MAX(item_price) AS max_item_price
+FROM OrderItems;
+
+SELECT SUM(quantity) AS sum_of_quantity, SUM((quantity)*SQRT(item_price)) AS sum_of_quantity_times_item_price
+FROM OrderItems;
+
+SELECT COUNT(DISTINCT(order_num)), COUNT(DISTINCT(cust_id))
+FROM Orders;
+
+
+
+
+ 
+
